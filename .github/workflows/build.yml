@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
@@ -20,20 +20,18 @@ jobs:
         with:
           channel: stable
 
-      - name: Recreate project structure
+      - name: Build clean flutter project
         run: |
-          mkdir temp_app
-          cd temp_app
-          flutter create --project-name=flosi .
-          cp -r android ..
           cd ..
-          rm -rf temp_app
-
-      - run: flutter pub get
-      - run: flutter build apk --release
+          flutter create clean_flosi
+          cp -r flosi/* clean_flosi/ || true
+          cd clean_flosi
+          flutter pub get
+          flutter build apk --release
+          cp build/app/outputs/flutter-apk/app-release.apk ../flosi/app-release.apk
 
       - uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: app-release.apk
           
