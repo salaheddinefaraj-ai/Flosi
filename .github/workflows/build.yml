@@ -17,7 +17,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
-      - run: flutter create . --force
+      - run: flutter create . --project-name=flosi --force
       - run: flutter pub get
       - run: flutter build apk --release
       - uses: actions/upload-artifact@v4
