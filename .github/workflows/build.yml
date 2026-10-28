@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
@@ -20,15 +20,17 @@ jobs:
         with:
           channel: stable
 
-      - name: Build clean flutter project
+      - name: Setup Complete Flutter App
         run: |
-          cd ..
-          flutter create clean_flosi
-          cp -r flosi/* clean_flosi/ || true
-          cd clean_flosi
+          mkdir -p my_app
+          cd my_app
+          flutter create --project-name=flosi .
+          rm -f lib/main.dart
+          cp ../*.dart lib/ 2>/dev/null || true
+          if [ -d "../lib" ]; then cp -r ../lib/* lib/ 2>/dev/null || true; fi
           flutter pub get
           flutter build apk --release
-          cp build/app/outputs/flutter-apk/app-release.apk ../flosi/app-release.apk
+          cp build/app/outputs/flutter-apk/app-release.apk ../app-release.apk
 
       - uses: actions/upload-artifact@v4
         with:
